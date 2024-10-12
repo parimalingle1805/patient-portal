@@ -1,0 +1,8 @@
+#bg {
+    background: url("../images/bg.png") no-repeat;
+    background-size: 100vw 100vh;
+}
+
+#welcome-text {
+    font-size: 5rem;
+}
