@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} Login {% endblock %}
+{% block title %} Sign Up {% endblock %}
 
 {% block content %}
 
@@ -17,14 +17,43 @@
               <div class="container d-flex justify-content-start pt-1">
                   <h1>Sign Up</h1>
               </div>
-              <form>
+              <form method="post">
+                {% csrf_token %}
+                <div class="row mb-2">
+                  <div class="col">
+                    <div class="row">
+                      <label for="inputFirstname" class="col-form-label">First Name : </label>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <input type="text" class="form-control" id="inputFirstname" name="user_fname" required>
+                      </div>                    
+                      <div id="nameHelpBlock" class="form-text">
+                        Enter your First and Last name.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="row">
+                      <label for="inputLastname" class="col-form-label">Last Name : </label>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <input type="text" class="form-control" id="inputLastname" name="user_lname" required>
+                      </div>                    
+                      <!-- <div id="nameHelpBlock" class="form-text">
+                        Enter your First and Last name.
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
                 <div class="row mb-2">
                   <div class="row">
                     <label for="inputEmail" class="col-form-label">Email : </label>
                   </div>
                   <div class="row">
                     <div class="col">
-                      <input type="email" class="form-control" id="inputEmail" required>
+                      <input type="email" class="form-control" id="inputEmail" name="user_email" required>
                     </div>
                   </div>
                 </div>
@@ -35,13 +64,16 @@
                   <div class="row">
                     <div class="col">
                       <input
-                      id="telNo"
-                      name="telNo"
+                      id="inputPhone"
+                      name="user_phone"
                       class="form-control"
                       type="tel"
                       required
                       pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                      title="Must be in the format xxx-xxx-xxxx">
+                      title="">
+                    </div>
+                    <div id="phoneHelpBlock" class="form-text">
+                      Must be in the format xxx-xxx-xxxx
                     </div>
                   </div>
                 </div>
@@ -53,7 +85,10 @@
                     <div class="col">
                       <input type="password" class="form-control" id="inputPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"  
                         title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
-                        required>
+                        name="user_pw" required>
+                    </div>
+                    <div id="phoneHelpBlock" class="form-text">
+                      Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters
                     </div>
                   </div>
                 </div>
@@ -65,7 +100,7 @@
                     <div class="col">
                       <input type="password" class="form-control" id="cnfPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"  
                       title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
-                      required>
+                      name="user_cnf_pw" required>
                     </div>
                   </div>
                 </div>

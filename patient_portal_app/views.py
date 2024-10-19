@@ -1,4 +1,6 @@
-from django.shortcuts import render    
+from django.shortcuts import render  
+from .models import User  
+from .forms import registerForm
 
 def login(req):
     welcome_text = "Welcome to Patient Portal."
