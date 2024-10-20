@@ -24,17 +24,26 @@
           </div>
           <div class="col-lg-6 d-flex align-content-center justify-content-center">
             <div class="card m-1 p-4 justify-content-evenly" style="width: 90%; min-height: 70vh;  border-radius: 10px">
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              {% endif %}
               <div class="container d-flex justify-content-start">
                   <h1>Sign in</h1>
               </div>
-              <form>
+              <form method="POST">
+                {% csrf_token %}
                 <div class="row mb-2">
                   <div class="row">
                     <label for="inputEmail" class="col-form-label">Email : </label>
                   </div>
                   <div class="row">
                     <div class="col">
-                      <input type="email" class="form-control" id="inputEmail" required>
+                      <input type="email" class="form-control" id="inputEmail" name="user_email" required>
                     </div>
                   </div>
                 </div>
@@ -44,13 +53,14 @@
                   </div>
                   <div class="row">
                     <div class="col">
-                      <input type="password" class="form-control" id="inputPassword" required>
+                      <input type="password" class="form-control" id="inputPassword" name="user_pw" required>
                     </div>
                   </div>
                 </div>
                 <div class="row d-flex justify-content-center">
                   <button style="width: 33%;" type="submit" class="btn btn-primary mt-2">Sign In</button>
-                </div>              </form>
+                </div>              
+              </form>
               <div class="container mt-3">
                 Don't have an account yet? <a href="{% url 'register' %}">Sign Up</a>
               </div>
