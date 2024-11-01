@@ -16,6 +16,7 @@ def login(req):
             return redirect('landing')
         else:
             messages.success(req, ('User or Password does not match. Please try again!'))
+            return redirect('login')
     else:
         if not user_loggedIn:
             return render(req, 'login.html', {})
@@ -44,7 +45,11 @@ def register(req):
         return render(req, 'register.html', {})
     
 def landing(req):
-    return render(req, 'landing.html', {})
+    global user_loggedIn
+    if user_loggedIn == True:
+        return render(req, 'landing.html', {})
+    else:
+        return redirect('login')
 
 def logout(req):
     global user_loggedIn

@@ -10,3 +10,9 @@
 .text-center {
     text-align: center;
 }
+
+.feat {
+    background-color: rgb(88, 180, 3);
+    border-radius: 10px;
+    color: white;
+}
