@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render  
-from .models import User  
-from .forms import registerForm
+from .models import User, Symptom  
+from .forms import registerForm, symptomForm
 from django.contrib import messages
 
 user_loggedIn = False
@@ -46,10 +46,31 @@ def register(req):
     
 def landing(req):
     global user_loggedIn
-    if user_loggedIn == True:
-        return render(req, 'landing.html', {})
+    if req.method == 'POST':
+        # symptom = symptomForm(req.POST or None)
+        # if symptom.is_valid():
+        # symptoms = print(req.POST['user_symptoms'])
+        symptoms = list(map(str, req.POST['user_symptoms'].split(',')))
+        print(symptoms)
+        pres = []
+        for s in symptoms:
+            if not Symptom.objects.filter(symptoms_list='fever'):
+                messages.success(req, ('System cannot find prescription for given symptoms. Please book an appointment with a doctor.'))
+                return redirect('landing')
+            else:
+                r = Symptom.objects.get(symptoms_list=s)   
+                pres.append({'symp': s, 'pr': r.prescription, 'sugg': r.suggestions})
+                # print(r)
+                # print(r.prescription)
+                # print(r.suggestions)
+        print(pres)
+        return render(req, 'prescription.html', {'pres': pres})
+        # prescription(req, pres)
     else:
-        return redirect('login')
+        if user_loggedIn == True:
+            return render(req, 'landing.html', {})
+        else:
+            return redirect('login')
 
 def logout(req):
     global user_loggedIn
@@ -58,3 +79,7 @@ def logout(req):
         return register(req)
     else:
         return login(req)
+    
+def prescription(req, pres):
+    # pres = "abc"  
+    return render(req, 'prescription.html', {"pres": pres})

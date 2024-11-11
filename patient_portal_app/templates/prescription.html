@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+
+        <div class="p-2 row justify-content-center">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% for item in pres %}
+          <div class="card justify-content-center mt-5" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">Symptom: {{ item.symp }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Prescription: {{ item.pr }}</h6>
+              <p class="card-text">Suggestion: {{ item.sugg }}</p>
+            </div>
+          </div>
+          {% endfor %}
+            <div class="row my-2 d-flex justify-content-center">
+              <div class="col d-flex justify-content-center">
+                <a class="btn btn-success my-4" href="{% url 'landing' %}"><i class="bi bi-house me-2"></i>Return</a>
+              </div>
+            </div>
+        </div>
+
+{% endblock %}
