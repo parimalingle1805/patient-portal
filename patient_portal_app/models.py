@@ -19,3 +19,9 @@ class Symptom(models.Model):
 
     def __str__(self):
         return self.symptoms_list
+
+class Appointments(models.Model):
+    user_appointment = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.user_appointment

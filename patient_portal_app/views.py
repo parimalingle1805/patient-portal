@@ -1,10 +1,11 @@
 from django.shortcuts import redirect, render  
-from .models import User, Symptom  
-from .forms import registerForm, symptomForm
+from .models import User, Symptom, Appointments
+from .forms import registerForm, symptomForm, appointmentForm
 from django.contrib import messages
+import datetime
 
 user_loggedIn = False
-
+sc_appt = []
 def login(req):
     global user_loggedIn
     if req.method == 'POST':
@@ -45,16 +46,21 @@ def register(req):
         return render(req, 'register.html', {})
     
 def landing(req):
-    global user_loggedIn
+    global user_loggedIn, sc_appt
     if req.method == 'POST':
         # symptom = symptomForm(req.POST or None)
         # if symptom.is_valid():
         # symptoms = print(req.POST['user_symptoms'])
-        symptoms = list(map(str, req.POST['user_symptoms'].split(',')))
+        # if ', ' in req.POST['user_symptoms']:
+        #     symptoms = list(set(list(map(str, req.POST['user_symptoms'].split(', ')))))
+        # else:
+        symptoms = list(set(list(map(str, req.POST['user_symptoms'].split(',')))))
         print(symptoms)
         pres = []
         for s in symptoms:
-            if not Symptom.objects.filter(symptoms_list='fever'):
+            if s[0] == ' ':
+                s = s[1:]
+            if not Symptom.objects.filter(symptoms_list=s):
                 messages.success(req, ('System cannot find prescription for given symptoms. Please book an appointment with a doctor.'))
                 return redirect('landing')
             else:
@@ -68,7 +74,7 @@ def landing(req):
         # prescription(req, pres)
     else:
         if user_loggedIn == True:
-            return render(req, 'landing.html', {})
+            return render(req, 'landing.html', {'sc_appt': Appointments.objects.values_list('user_appointment', flat=True)})
         else:
             return redirect('login')
 
@@ -80,6 +86,21 @@ def logout(req):
     else:
         return login(req)
     
-def prescription(req, pres):
-    # pres = "abc"  
-    return render(req, 'prescription.html', {"pres": pres})
+def appointment(req):
+    global sc_appt
+    curr_date = datetime.datetime.today().strftime('%Y-%m-%d')
+    if req.method == 'POST':
+        print(req.POST['app_date'])
+        dt, t = map(str, req.POST['app_date'].split('T'))
+        t_12 = datetime.datetime.strptime(t, '%H:%M')
+        t_12 = t_12.strftime('%I:%M %p')
+        if dt <= curr_date or '00:00' < t < '07:00':
+            messages.success(req, 'Scheduled appointments are fully booked and not available for this date/time . Please select another date.')
+            messages.success(req, 'Note: Scheduled appointments are not available today or past dates, 7:00AM to 12:00AM. So, please select a future date only with correct time!')
+        else:
+            messages.success(req, f'Your appointmant has been booked successfully for {dt} at {t_12}')
+            Appointments.objects.create(user_appointment = f'{dt} : {t_12}')
+            sc_appt.append(f'{dt} : {t_12}')
+        return redirect('appointment')
+    else:
+        return render(req, 'appointment.html', {'dt':curr_date + 'T07:00'})

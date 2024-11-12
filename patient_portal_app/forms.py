@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Symptom
+from .models import User, Symptom, Appointments
 
 class registerForm(forms.ModelForm):
     class Meta:
@@ -10,3 +10,8 @@ class symptomForm(forms.ModelForm):
     class Meta:
         model = Symptom
         fields = ["symptoms_list", "prescription", "suggestions"]
+
+class appointmentForm(forms.ModelForm):
+    class Meta:
+        model = Appointments
+        fields = ["user_appointment"]
