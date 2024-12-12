@@ -3,6 +3,8 @@ from .models import User, Symptom, Appointments
 from .forms import registerForm, symptomForm, appointmentForm
 from django.contrib import messages
 import datetime
+from django.core.mail import send_mail
+
 
 user_loggedIn = False
 sc_appt = []
@@ -98,7 +100,7 @@ def appointment(req):
             messages.success(req, 'Scheduled appointments are fully booked and not available for this date/time . Please select another date.')
             messages.success(req, 'Note: Scheduled appointments are not available today or past dates, 7:00AM to 12:00AM. So, please select a future date only with correct time!')
         else:
-            messages.success(req, f'Your appointmant has been booked successfully for {dt} at {t_12}')
+            messages.success(req, f'Your appointmant has been booked successfully for {dt} at {t_12}. You will receive a confirmation shortly.')
             Appointments.objects.create(user_appointment = f'{dt} : {t_12}')
             sc_appt.append(f'{dt} : {t_12}')
         return redirect('appointment')
